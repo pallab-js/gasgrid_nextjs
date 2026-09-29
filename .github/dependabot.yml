@@ -9,6 +9,12 @@ updates:
       # typescript-eslint does not support TypeScript 7 yet
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
+      # eslint-config-next rules break on ESLint 10 (getFilename removed)
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      # better-sqlite3 13 segfaults during migrate/seed on Node 20
+      - dependency-name: "better-sqlite3"
+        update-types: ["version-update:semver-major"]
     groups:
       react:
         patterns:
