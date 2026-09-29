@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GasNext
 
-## Getting Started
+Local, offline operations console for a City Gas Distribution (CGD) gas-grid
+company in India — dashboard analytics, network topology graph, schematic map,
+alarms, work orders, consumers and reports. Runs on localhost or a private LAN.
+No cloud, no Docker.
 
-First, run the development server:
+## Features
+
+- **Dashboard** — KPIs (intake, demand, availability, critical alarms,
+  pressure compliance, collections), 24 h demand balance, zone flow, consumer
+  mix, alarm trend and revenue charts, live alarm feed
+- **Network graph** — every node (CGS/DPRS/IPRS/CNG/valves/junctions) laid out
+  over the pipeline topology with zone/status/search filters and a live detail
+  drawer (gauge, sparkline, alarms, work orders)
+- **Schematic map** — offline Leaflet canvas (no tiles): boundary, pipeline
+  segments, status chips with alarm counts, consumer dots that cluster by zoom
+- **Stations** — sortable register with sparklines; per-station detail with
+  live gauge against the pressure band, 24 h pressure/flow chart, config,
+  events and work orders
+- **Telemetry explorer** — compare up to 8 assets × pressure/flow/temperature
+  over 1 h / 24 h / 7 d / 30 d with min/max/avg statistics
+- **Alarms console** — Open / Acknowledged / Resolved tabs, severity, type,
+  asset and time filters, role-gated acknowledge & resolve (audited)
+- **Work orders** — status board with allowed transitions, create/edit,
+  assignment, priorities, due dates and audit trail
+- **Consumers** — connection register with search/filters, meter readings,
+  invoice history and monthly consumption chart
+- **Reports** — monthly energy balance (UFG), category consumption,
+  revenue vs collection, SCADA availability, alarm & WO stats — each section
+  exports to CSV
+- **Settings** (admin) — users & roles, alarm thresholds, telemetry simulator
+  on/off + tick interval, inject-test-alarm, DB stats and audit log
+- **Live telemetry simulator** — background process (toggleable) producing
+  diurnal demand, drift and threshold alarms so every screen stays alive
+
+## Stack
+
+Next.js 16 (App Router, Turbopack) · React 19 · TypeScript (strict) ·
+Tailwind CSS v4 · shadcn/ui (radix-nova) · SQLite 3 (better-sqlite3 + Drizzle) ·
+Recharts · React Flow (`@xyflow/react`) · Leaflet (offline, no tiles).
+
+Design language: toned-down **DESIGN.md** (deep-indigo canvas, Blurple primary,
+green/magenta status accents) applied to a quiet, data-dense, dark UI.
+
+## Quick start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run db:setup     # migrate + seed (idempotent)
+npm run dev          # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Demo users (local prototype only):
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Username | Password | Role |
+|---|---|---|
+| `admin` | `admin123` | admin |
+| `operator` | `ops123` | operator |
+| `viewer` | `view123` | viewer |
+| `field` | `field123` | operator |
+| `supervisor` | `super123` | operator |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+A background **telemetry simulator** starts automatically (toggle in Settings) and
+keeps dashboards, alarms and gauges live.
 
-## Learn More
+## Scripts
 
-To learn more about Next.js, take a look at the following resources:
+| Command | Description |
+|---|---|
+| `npm run dev` | Dev server |
+| `npm run build` / `npm start` | Production build / serve |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | TypeScript check |
+| `npm run db:setup` | Apply migrations + seed demo data |
+| `npm run db:generate` | Generate migration from schema changes |
+| `npm run db:reset` | Drop, re-migrate and re-seed from scratch |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Private LAN use
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run dev -- -H 0.0.0.0   # trusted private network only
+```
 
-## Deploy on Vercel
+## Backup
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The entire state lives in `data/gasnext.db` (WAL). Stop the server and copy the
+file to back up. The `data/` directory is git-ignored; a fresh clone
+migrates and seeds itself on first run.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Documentation
+
+- [docs/PRD.md](docs/PRD.md) — product requirements
+- [docs/SDA.md](docs/SDA.md) — system design & architecture
+- [docs/TRD.md](docs/TRD.md) — technical decisions, tokens, budgets
+- [docs/APP-FLOW.md](docs/APP-FLOW.md) — routes, screens, journeys
+- [docs/SCHEMA.md](docs/SCHEMA.md) — database schema
+- [DESIGN.md](DESIGN.md) — source design language analysis
+
+## License
+
+[MIT](LICENSE)

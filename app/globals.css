@@ -1,8 +1,96 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * GasNext tokens — derived from DESIGN.md (Discord analysis), toned down for a
+ * professional dark operations console. Dark-only theme: :root carries the
+ * dark values; .dark mirrors them (html always has class="dark").
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0d3a; /* canvas */
+  --foreground: #f2f3fb; /* ink */
+  --card: #141847; /* raised indigo surface */
+  --card-foreground: #f2f3fb;
+  --popover: #1e2353; /* surface-indigo */
+  --popover-foreground: #f2f3fb;
+  --primary: #5865f2; /* blurple */
+  --primary-foreground: #ffffff;
+  --secondary: #1e2353;
+  --secondary-foreground: #f2f3fb;
+  --muted: #1b2050;
+  --muted-foreground: #9ba1c9;
+  --accent: #1e2353;
+  --accent-foreground: #f2f3fb;
+  --destructive: #ec48bd; /* magenta — critical */
+  --destructive-foreground: #ffffff;
+  --success: #35ed7e; /* electric green — healthy */
+  --success-foreground: #06130b;
+  --warning: #f0b429; /* functional amber */
+  --warning-foreground: #231a02;
+  --info: #00b0f4; /* link cyan */
+  --info-foreground: #02141c;
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.15);
+  --ring: #5865f2;
+  --chart-1: #5865f2;
+  --chart-2: #35ed7e;
+  --chart-3: #ec48bd;
+  --chart-4: #00b0f4;
+  --chart-5: #f0b429;
+  --radius: 0.75rem;
+  --sidebar: #0a0d3a;
+  --sidebar-foreground: #c9cdf0;
+  --sidebar-primary: #5865f2;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1e2353;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #5865f2;
+}
+
+.dark {
+  --background: #0a0d3a;
+  --foreground: #f2f3fb;
+  --card: #141847;
+  --card-foreground: #f2f3fb;
+  --popover: #1e2353;
+  --popover-foreground: #f2f3fb;
+  --primary: #5865f2;
+  --primary-foreground: #ffffff;
+  --secondary: #1e2353;
+  --secondary-foreground: #f2f3fb;
+  --muted: #1b2050;
+  --muted-foreground: #9ba1c9;
+  --accent: #1e2353;
+  --accent-foreground: #f2f3fb;
+  --destructive: #ec48bd;
+  --destructive-foreground: #ffffff;
+  --success: #35ed7e;
+  --success-foreground: #06130b;
+  --warning: #f0b429;
+  --warning-foreground: #231a02;
+  --info: #00b0f4;
+  --info-foreground: #02141c;
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.15);
+  --ring: #5865f2;
+  --chart-1: #5865f2;
+  --chart-2: #35ed7e;
+  --chart-3: #ec48bd;
+  --chart-4: #00b0f4;
+  --chart-5: #f0b429;
+  --radius: 0.75rem;
+  --sidebar: #0a0d3a;
+  --sidebar-foreground: #c9cdf0;
+  --sidebar-primary: #5865f2;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1e2353;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #5865f2;
 }
 
 @theme inline {
@@ -10,17 +98,203 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-geist-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.34);
+  --radius-2xl: calc(var(--radius) * 1.75);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+    color-scheme: dark;
   }
 }
 
-body {
-  background: var(--background);
+@utility tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Leaflet offline schematic ── */
+.leaflet-container {
+  background: transparent !important;
+  font-family: var(--font-sans);
+  outline: none;
+}
+
+.leaflet-bar,
+.leaflet-control-layers {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  box-shadow: 0 8px 20px -8px rgb(0 0 0 / 0.55);
+  overflow: hidden;
+}
+
+.leaflet-bar a,
+.leaflet-bar a:hover {
+  background: transparent;
+  color: var(--foreground);
+  border-bottom-color: var(--border);
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+}
+
+.leaflet-bar a:hover {
+  background: var(--muted);
+}
+
+.leaflet-bar a.leaflet-disabled {
+  opacity: 0.35;
+}
+
+.leaflet-control-layers-expanded {
+  background: var(--card) !important;
+  background-color: var(--card) !important;
+  color: var(--foreground) !important;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 12px;
+  box-shadow: 0 8px 20px -8px rgb(0 0 0 / 0.55);
+}
+
+.leaflet-control-layers-expanded label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 5px 0;
+}
+
+.leaflet-control-layers-expanded input[type="checkbox"] {
+  accent-color: var(--primary);
+}
+
+.gas-map-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.gas-map-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  background: color-mix(in oklab, var(--card) 92%, transparent);
+  border: 1px solid;
+  border-radius: 999px;
+  font-family: var(--font-geist-mono), var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 6px 16px -6px rgb(0 0 0 / 0.65);
+  backdrop-filter: blur(6px);
+  transform: translate(-50%, -50%);
+}
+
+.gas-map-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.gas-map-alarm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  margin-left: -3px;
+  border-radius: 999px;
+  background: var(--destructive);
+  color: var(--destructive-foreground);
+  font-size: 10px;
+}
+
+.gas-map-tooltip {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  border-radius: 8px;
+  box-shadow: none;
+  font-size: 11px;
+  padding: 3px 8px;
+}
+
+.gas-map-tooltip::before {
+  display: none;
+}
+
+/* leaflet's own stylesheet loads after globals — win the cascade */
+.leaflet-bar,
+.leaflet-control-layers {
+  background: var(--card) !important;
+  background-color: var(--card) !important;
+}
+
+.leaflet-bar a,
+.leaflet-bar a:hover {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--foreground) !important;
+}
+
+.leaflet-bar a:hover {
+  background: var(--muted) !important;
+  background-color: var(--muted) !important;
+}
+
+.leaflet-control-layers-expanded {
+  background-color: var(--card) !important;
+  color: var(--foreground) !important;
 }
