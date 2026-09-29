@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-smoke:
+    name: Lint, build & smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Set up database (migrate + seed)
+        run: npm run db:setup
+
+      - name: Production build
+        run: npm run build
+
+      - name: Install headless browser
+        run: npx playwright-core install --with-deps chromium chromium-headless-shell
+
+      - name: Start production server
+        run: |
+          npm start > server.log 2>&1 &
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:3000/login > /dev/null; then
+              echo "server up after ${i}s"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "server failed to start"
+          tail -100 server.log
+          exit 1
+
+      - name: Run smoke tests
+        run: |
+          set -e
+          for s in smoke smoke-network smoke-filter smoke-map smoke-stations smoke-alarms smoke-workorders smoke-consumers smoke-reports-settings; do
+            echo "::group::scripts/$s.mjs"
+            node "scripts/$s.mjs"
+            echo "::endgroup::"
+          done
+
+      - name: Server log on failure
+        if: failure()
+        run: tail -200 server.log || true
+
+      - name: Upload screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-screenshots
+          path: /tmp/shot-*.png
+          if-no-files-found: ignore
+          retention-days: 7

@@ -1,0 +1,35 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      nextjs:
+        patterns:
+          - "next"
+          - "eslint-config-next"
+      ui:
+        patterns:
+          - "radix-ui"
+          - "shadcn"
+          - "tailwindcss"
+          - "@tailwindcss/postcss"
+          - "tw-animate-css"
+          - "class-variance-authority"
+          - "lucide-react"
+          - "sonner"
+          - "next-themes"
+      charts:
+        patterns:
+          - "recharts"
+          - "@xyflow/react"
+          - "leaflet"
+          - "react-leaflet"
+          - "@types/leaflet"
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly

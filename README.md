@@ -1,5 +1,8 @@
 # GasNext
 
+[![CI](https://github.com/pallab-js/gasgrid_nextjs/actions/workflows/ci.yml/badge.svg)](https://github.com/pallab-js/gasgrid_nextjs/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 Local, offline operations console for a City Gas Distribution (CGD) gas-grid
 company in India — dashboard analytics, network topology graph, schematic map,
 alarms, work orders, consumers and reports. Runs on localhost or a private LAN.
@@ -75,6 +78,20 @@ keeps dashboards, alarms and gauges live.
 | `npm run db:setup` | Apply migrations + seed demo data |
 | `npm run db:generate` | Generate migration from schema changes |
 | `npm run db:reset` | Drop, re-migrate and re-seed from scratch |
+
+## Smoke tests
+
+Nine Playwright smoke suites cover every screen plus role-gating and actions:
+
+```bash
+npx playwright-core install chromium   # once
+npm run dev                            # in another terminal
+node scripts/smoke.mjs                 # scripts/smoke-*.mjs for the rest
+```
+
+CI (`.github/workflows/ci.yml`) runs lint, typecheck, a production build and
+all smoke suites against the built app on every push and pull request.
+Dependabot keeps npm and GitHub Actions dependencies fresh.
 
 ## Private LAN use
 

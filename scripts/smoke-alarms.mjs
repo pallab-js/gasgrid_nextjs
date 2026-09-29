@@ -1,6 +1,5 @@
-import { chromium } from "playwright-core";
-const EXE = "/Users/pallabpc/Library/Caches/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-mac-arm64/chrome-headless-shell";
-const browser = await chromium.launch({ executablePath: EXE, headless: true });
+import { launchBrowser } from "./browser.mjs";
+const browser = await launchBrowser();
 const errors = [];
 
 async function login(page, user, pass) {
