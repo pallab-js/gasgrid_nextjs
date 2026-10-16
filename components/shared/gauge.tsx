@@ -31,12 +31,16 @@ export function Gauge({
   const end = 2 * Math.PI; // 0°
 
   const arcPath = (from: number, to: number) => {
+    // Round to a fixed precision so the server and client render byte-identical
+    // path strings. Raw Math.cos/Math.sin output can differ in trailing digits
+    // across JS engines, which causes an SVG hydration mismatch.
+    const f = (n: number) => (Math.round(n * 1000) / 1000).toString();
     const x1 = cx + r * Math.cos(from);
     const y1 = cy + r * Math.sin(from);
     const x2 = cx + r * Math.cos(to);
     const y2 = cy + r * Math.sin(to);
     const large = to - from > Math.PI ? 1 : 0;
-    return `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`;
+    return `M ${f(x1)} ${f(y1)} A ${r} ${r} 0 ${large} 1 ${f(x2)} ${f(y2)}`;
   };
 
   const inBand =
@@ -92,8 +96,8 @@ export function Gauge({
         {/* needle */}
         {value != null ? (
           <circle
-            cx={cx + (r - 2) * Math.cos(valueAngle)}
-            cy={cy + (r - 2) * Math.sin(valueAngle)}
+            cx={Math.round((cx + (r - 2) * Math.cos(valueAngle)) * 1000) / 1000}
+            cy={Math.round((cy + (r - 2) * Math.sin(valueAngle)) * 1000) / 1000}
             r={5}
             className={cn("fill-current", color)}
             stroke="var(--card)"
