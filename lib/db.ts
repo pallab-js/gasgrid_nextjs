@@ -34,6 +34,9 @@ export function getDb(): Db {
     sqlite.pragma("journal_mode = WAL");
     sqlite.pragma("foreign_keys = ON");
     sqlite.pragma("synchronous = NORMAL");
+    // Wait up to 5s for a competing writer (simulator + concurrent actions)
+    // instead of throwing SQLITE_BUSY immediately.
+    sqlite.pragma("busy_timeout = 5000");
     const db = drizzle(sqlite, { schema });
     bootstrap(db);
     g.__gasnext_db = db;

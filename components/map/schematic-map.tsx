@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Layers, LocateFixed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ZONE_STROKE } from "@/lib/constants";
+import { useLiveNodes } from "@/lib/live/provider";
 import type { MapData } from "@/lib/repo/mapdata";
 import type { Role } from "@/lib/schema";
 import { NodeDrawer } from "@/components/network/node-drawer";
@@ -246,49 +247,35 @@ export function SchematicMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /* live node badges (status ring, alarm count) */
+  /* live node badges (status ring, alarm count) — shared poll of /api/live/nodes */
+  const liveNodes = useLiveNodes<{ ts: number; nodes: MapData["nodes"] }>();
   useEffect(() => {
-    let alive = true;
-    const load = async () => {
-      try {
-        const res = await fetch("/api/live/nodes", { cache: "no-store" });
-        if (!res.ok || !alive) return;
-        const body = (await res.json()) as { nodes: MapData["nodes"] };
-        if (!alive) return;
-        liveNodesRef.current = body.nodes;
-        const byId = new Map(body.nodes.map((n) => [n.id, n]));
-        for (const [id, marker] of markersRef.current) {
-          const n = byId.get(id);
-          if (!n) continue;
-          const dot = STATUS_DOT[n.status] ?? "bg-muted-foreground";
-          const chip = STATUS_CHIP[n.status] ?? "border-border text-muted-foreground";
-          const el = marker.getElement()?.querySelector(".gas-map-chip");
-          if (!el) continue;
-          el.className = `gas-map-chip ${chip}`;
-          const dotEl = el.querySelector(".gas-map-dot");
-          if (dotEl) dotEl.className = `gas-map-dot ${dot}`;
-          const alarmEl = el.querySelector(".gas-map-alarm");
-          if (n.openAlarms > 0) {
-            if (alarmEl) alarmEl.textContent = String(n.openAlarms);
-            else
-              el.insertAdjacentHTML(
-                "beforeend",
-                `<span class="gas-map-alarm">${n.openAlarms}</span>`
-              );
-          } else if (alarmEl) {
-            alarmEl.remove();
-          }
-        }
-      } catch {
-        /* transient */
+    if (!ready || !liveNodes?.nodes) return;
+    liveNodesRef.current = liveNodes.nodes;
+    const byId = new Map(liveNodes.nodes.map((n) => [n.id, n]));
+    for (const [id, marker] of markersRef.current) {
+      const n = byId.get(id);
+      if (!n) continue;
+      const dot = STATUS_DOT[n.status] ?? "bg-muted-foreground";
+      const chip = STATUS_CHIP[n.status] ?? "border-border text-muted-foreground";
+      const el = marker.getElement()?.querySelector(".gas-map-chip");
+      if (!el) continue;
+      el.className = `gas-map-chip ${chip}`;
+      const dotEl = el.querySelector(".gas-map-dot");
+      if (dotEl) dotEl.className = `gas-map-dot ${dot}`;
+      const alarmEl = el.querySelector(".gas-map-alarm");
+      if (n.openAlarms > 0) {
+        if (alarmEl) alarmEl.textContent = String(n.openAlarms);
+        else
+          el.insertAdjacentHTML(
+            "beforeend",
+            `<span class="gas-map-alarm">${n.openAlarms}</span>`
+          );
+      } else if (alarmEl) {
+        alarmEl.remove();
       }
-    };
-    const id = setInterval(load, 5000);
-    return () => {
-      alive = false;
-      clearInterval(id);
-    };
-  }, [ready]);
+    }
+  }, [ready, liveNodes]);
 
   const recenter = async () => {
     const L = (await import("leaflet")).default;

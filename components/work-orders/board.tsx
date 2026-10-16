@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { Loader2, MoreHorizontal, Pencil, Plus } from "lucide-react";
@@ -57,6 +57,7 @@ import {
   type WoType,
 } from "@/lib/schema";
 import type { WorkOrdersBoard, WoRow } from "@/lib/repo/work-orders";
+import { useLiveWorkOrders, useLiveRefetch } from "@/lib/live/provider";
 import { TERMINAL_WO, WO_NEXT } from "@/lib/wo-status";
 import { cn } from "cn";
 
@@ -196,7 +197,6 @@ export function WorkOrderBoard({
   initial: WorkOrdersBoard;
   role: "admin" | "operator" | "viewer";
 }) {
-  const [data, setData] = useState(initial);
   const [search, setSearch] = useState("");
   const [priority, setPriority] = useState<"all" | Priority>("all");
   const [assignee, setAssignee] = useState<"all" | "none" | string>("all");
@@ -207,19 +207,10 @@ export function WorkOrderBoard({
   const [pending, startTransition] = useTransition();
   const canAct = role !== "viewer";
 
-  const refresh = useCallback(async () => {
-    try {
-      const res = await fetch("/api/live/work-orders", { cache: "no-store" });
-      if (res.ok) setData((await res.json()) as WorkOrdersBoard);
-    } catch {
-      /* transient */
-    }
-  }, []);
-
-  useEffect(() => {
-    const id = setInterval(refresh, 15000);
-    return () => clearInterval(id);
-  }, [refresh]);
+  // Background updates flow through the shared live poller; `refresh` forces an
+  // immediate refetch for instant feedback after a create/edit action.
+  const data = useLiveWorkOrders<WorkOrdersBoard>(initial) ?? initial;
+  const refresh = useLiveRefetch("work-orders");
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -281,7 +272,7 @@ export function WorkOrderBoard({
           toast.success("Work order updated");
         }
         setDialog(null);
-        await refresh();
+        refresh();
       } catch (err) {
         toast.error(
           err instanceof Error
@@ -306,7 +297,7 @@ export function WorkOrderBoard({
           status: s,
         });
         toast.success(`${r.code} → ${WO_STATUS_LABELS[s]}`);
-        await refresh();
+        refresh();
       } catch (err) {
         toast.error(
           err instanceof Error

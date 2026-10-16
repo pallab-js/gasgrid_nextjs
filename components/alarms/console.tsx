@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
@@ -37,6 +37,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { ackAlarmAction, resolveAlarmAction } from "@/lib/actions/alarms";
+import { useLiveAlarms, useLiveRefetch } from "@/lib/live/provider";
 import { ALARM_TYPE_LABELS, SEVERITY_TONE } from "@/lib/constants";
 import { fmtDateTime, timeAgo } from "@/lib/format";
 import type { AlarmsPage as AlarmsPageData } from "@/lib/repo/alarms";
@@ -92,7 +93,6 @@ export function AlarmsConsole({
   role: Role;
   initialStatus: "open" | "acknowledged" | "resolved";
 }) {
-  const [data, setData] = useState(initial);
   const [tab, setTab] = useState<"open" | "acknowledged" | "resolved">(
     initialStatus
   );
@@ -105,19 +105,10 @@ export function AlarmsConsole({
   const [resolveNote, setResolveNote] = useState("");
   const canAct = role === "admin" || role === "operator";
 
-  const refresh = useCallback(async () => {
-    try {
-      const res = await fetch("/api/live/alarms", { cache: "no-store" });
-      if (res.ok) setData((await res.json()) as AlarmsPageData);
-    } catch {
-      /* transient */
-    }
-  }, []);
-
-  useEffect(() => {
-    const id = setInterval(refresh, 10000);
-    return () => clearInterval(id);
-  }, [refresh]);
+  // Background updates flow through the shared live poller; `refresh` forces an
+  // immediate refetch for instant feedback after an ack/resolve action.
+  const data = useLiveAlarms<AlarmsPageData>(initial) ?? initial;
+  const refresh = useLiveRefetch("alarms");
 
   const rows = useMemo(() => {
     const now = data.ts;
@@ -138,7 +129,7 @@ export function AlarmsConsole({
       try {
         await fn();
         toast.success(ok);
-        await refresh();
+        refresh();
       } catch (err) {
         toast.error(
           err instanceof Error

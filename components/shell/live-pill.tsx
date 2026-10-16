@@ -3,34 +3,24 @@
 import { useEffect, useState } from "react";
 import { cn } from "cn";
 import { Radio } from "lucide-react";
+import { useLiveStatus } from "@/lib/live/provider";
 import type { LiveStatus } from "@/lib/types";
 
-export function LivePill({ className }: { className?: string }) {
-  const [status, setStatus] = useState<LiveStatus | null>(null);
-  const [online, setOnline] = useState<boolean | null>(null);
+/** Status refreshes every 10s; treat >30s without a fresh snapshot as stale. */
+const STALE_AFTER_MS = 30_000;
 
+export function LivePill({ className }: { className?: string }) {
+  const status = useLiveStatus<LiveStatus>();
+
+  // Local 5s ticker (no network) so the stale indicator updates even when the
+  // shared stream has gone quiet. `now` is state, not a render-time Date.now().
+  const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
-    let cancelled = false;
-    const tick = async () => {
-      try {
-        const res = await fetch("/api/live/status", { cache: "no-store" });
-        if (!res.ok) throw new Error("bad status");
-        const json = (await res.json()) as LiveStatus;
-        if (!cancelled) {
-          setStatus(json);
-          setOnline(true);
-        }
-      } catch {
-        if (!cancelled) setOnline(false);
-      }
-    };
-    tick();
-    const id = setInterval(tick, 10_000);
-    return () => {
-      cancelled = true;
-      clearInterval(id);
-    };
+    const id = setInterval(() => setNow(Date.now()), 5_000);
+    return () => clearInterval(id);
   }, []);
+
+  const online = status == null ? null : now - status.ts <= STALE_AFTER_MS;
 
   const critical = status?.openCritical ?? 0;
 

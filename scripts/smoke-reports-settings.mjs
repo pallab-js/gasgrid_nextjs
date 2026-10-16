@@ -39,13 +39,20 @@ await page.waitForSelector("text=Users & roles", { timeout: 10000 });
 // create user
 await page.click('button:has-text("New user")');
 await page.waitForSelector("text=New user", { timeout: 5000 });
-await page.fill("#u-name", "smoke_tmp");
+// Unique, validation-safe username (a–z, 0–9, _; 3–20 chars) so repeat runs on
+// a persistent local DB never collide with a leftover user from a prior run.
+// (CI starts from a fresh seeded DB, so this was previously green only there.)
+const tmpUser = `smoke_${Date.now().toString().slice(-8)}`;
+await page.fill("#u-name", tmpUser);
 await page.fill("#u-full", "Smoke Tester");
 await page.fill("#u-pw", "smoke123");
 await page.locator('[role="dialog"] button:has-text("Create")').click();
-await page.waitForTimeout(1000);
+// Wait for the create dialog to close (its overlay would otherwise block the
+// thresholds "Save" click below).
+await page.waitForSelector('[role="dialog"]', { state: "detached", timeout: 10000 });
+await page.waitForTimeout(300);
 const userToast = await page.locator("text=User created").count();
-const userRow = await page.locator("td", { hasText: "smoke_tmp" }).count();
+const userRow = await page.locator("td", { hasText: tmpUser }).count();
 
 // thresholds save roundtrip
 const hf = page.locator('input[type="number"][step="100"]');

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Activity,
@@ -11,6 +10,7 @@ import {
   Network as NetworkIcon,
 } from "lucide-react";
 import type { Overview } from "@/lib/repo/overview";
+import { useLiveOverview } from "@/lib/live/provider";
 import { fmtInt, inr, pct } from "@/lib/format";
 import { KpiCard } from "./kpi-card";
 import {
@@ -24,26 +24,7 @@ import { AlarmFeed } from "./alarm-feed";
 import { StationTable } from "./station-table";
 
 export function DashboardView({ initial }: { initial: Overview }) {
-  const [data, setData] = useState<Overview>(initial);
-
-  useEffect(() => {
-    let alive = true;
-    const load = async () => {
-      try {
-        const res = await fetch("/api/live/overview", { cache: "no-store" });
-        if (!res.ok) return;
-        const json = (await res.json()) as Overview;
-        if (alive) setData(json);
-      } catch {
-        /* transient — next poll retries */
-      }
-    };
-    const id = setInterval(load, 6000);
-    return () => {
-      alive = false;
-      clearInterval(id);
-    };
-  }, []);
+  const data = useLiveOverview<Overview>(initial) ?? initial;
 
   const k = data.kpis;
 

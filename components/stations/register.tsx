@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowDown, ArrowUp, Search } from "lucide-react";
 import { cn } from "cn";
@@ -30,6 +30,7 @@ import {
 import { fmtDec, fmtInt, timeAgo } from "@/lib/format";
 import type { StationsRegister } from "@/lib/repo/stations";
 import type { NetworkGraph } from "@/lib/repo/network";
+import { useLiveNodes } from "@/lib/live/provider";
 import type { NodeKind, NodeStatus, Zone } from "@/lib/schema";
 import { Sparkline } from "@/components/shared/sparkline";
 
@@ -83,7 +84,6 @@ function SortHead({
 }
 
 export function StationsRegister({ initial }: { initial: StationsRegister }) {
-  const [rows, setRows] = useState(initial.rows);
   const [query, setQuery] = useState("");
   const [kind, setKind] = useState<"all" | NodeKind>("all");
   const [zone, setZone] = useState<"all" | Zone>("all");
@@ -93,41 +93,23 @@ export function StationsRegister({ initial }: { initial: StationsRegister }) {
     dir: 1,
   });
 
-  /* live readings */
-  useEffect(() => {
-    let alive = true;
-    const load = async () => {
-      try {
-        const res = await fetch("/api/live/nodes", { cache: "no-store" });
-        if (!res.ok || !alive) return;
-        const body = (await res.json()) as Pick<NetworkGraph, "ts" | "nodes">;
-        if (!alive) return;
-        const byId = new Map(body.nodes.map((n) => [n.id, n]));
-        setRows((prev) =>
-          prev.map((r) => {
-            const live = byId.get(r.id);
-            if (!live) return r;
-            if (r.p === live.p && r.f === live.f && r.status === live.status && r.openAlarms === live.openAlarms)
-              return r;
-            return {
-              ...r,
-              p: live.p,
-              f: live.f,
-              status: live.status as NodeStatus,
-              openAlarms: live.openAlarms,
-            };
-          })
-        );
-      } catch {
-        /* transient */
-      }
-    };
-    const id = setInterval(load, 10000);
-    return () => {
-      alive = false;
-      clearInterval(id);
-    };
-  }, []);
+  /* live readings — shared poll of /api/live/nodes merged into the register */
+  const liveNodes = useLiveNodes<Pick<NetworkGraph, "ts" | "nodes">>();
+  const rows = useMemo(() => {
+    if (!liveNodes?.nodes) return initial.rows;
+    const byId = new Map(liveNodes.nodes.map((n) => [n.id, n]));
+    return initial.rows.map((r) => {
+      const live = byId.get(r.id);
+      if (!live) return r;
+      return {
+        ...r,
+        p: live.p,
+        f: live.f,
+        status: live.status as NodeStatus,
+        openAlarms: live.openAlarms,
+      };
+    });
+  }, [initial.rows, liveNodes]);
 
   const view = useMemo(() => {
     const q = query.trim().toLowerCase();

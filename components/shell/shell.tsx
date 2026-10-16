@@ -4,6 +4,7 @@ import { useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import type { Role } from "@/lib/schema";
+import { LiveProvider } from "@/lib/live/provider";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { Clock } from "./clock";
@@ -33,6 +34,7 @@ export function Shell({
   const title = titleForPath(pathname);
 
   return (
+    <LiveProvider>
     <div className="flex h-dvh overflow-hidden bg-background">
       <aside className="hidden w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar lg:flex">
         <Brand />
@@ -79,5 +81,6 @@ export function Shell({
         </SheetContent>
       </Sheet>
     </div>
+    </LiveProvider>
   );
 }

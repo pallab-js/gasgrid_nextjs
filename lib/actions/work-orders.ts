@@ -42,19 +42,6 @@ export async function createWorkOrderAction(input: WorkOrderInput): Promise<void
   assertEnums(input.type, input.priority);
 
   const db = getDb();
-  const year = new Date().getFullYear();
-  const existing = db
-    .select({ code: workOrders.code })
-    .from(workOrders)
-    .orderBy(asc(workOrders.code))
-    .all();
-  let seq = 1;
-  for (const r of existing) {
-    const m = /^WO-(\d{4})-(\d{4})$/.exec(r.code);
-    if (m && Number(m[1]) === year) seq = Math.max(seq, Number(m[2]) + 1);
-  }
-  const code = `WO-${year}-${String(seq).padStart(4, "0")}`;
-
   const nodeId = input.nodeId ?? null;
   if (nodeId != null) {
     const n = db.select({ id: nodes.id }).from(nodes).where(eq(nodes.id, nodeId)).get();
@@ -63,26 +50,59 @@ export async function createWorkOrderAction(input: WorkOrderInput): Promise<void
 
   const now = Date.now();
   const assignedTo = input.assignedTo ?? null;
-  const row = db
-    .insert(workOrders)
-    .values({
-      code,
-      title,
-      description: input.description?.trim() || null,
-      type: input.type,
-      priority: input.priority,
-      status: assignedTo ? "assigned" : "open",
-      nodeId,
-      assignedTo,
-      dueOn: input.dueOn ?? null,
-      createdBy: user.id,
-      createdAt: now,
-    })
-    .returning({ id: workOrders.id })
-    .get();
+  const year = new Date().getFullYear();
+
+  // Compute the next WO code and insert atomically so two concurrent creates
+  // cannot derive the same sequence. The unique index on `code` is the final
+  // guard; retry a few times if a racing transaction committed first.
+  const allocate = (): { id: number; code: string } =>
+    db.transaction((tx) => {
+      const existing = tx
+        .select({ code: workOrders.code })
+        .from(workOrders)
+        .orderBy(asc(workOrders.code))
+        .all();
+      let seq = 1;
+      for (const r of existing) {
+        const m = /^WO-(\d{4})-(\d{4})$/.exec(r.code);
+        if (m && Number(m[1]) === year) seq = Math.max(seq, Number(m[2]) + 1);
+      }
+      const code = `WO-${year}-${String(seq).padStart(4, "0")}`;
+      const inserted = tx
+        .insert(workOrders)
+        .values({
+          code,
+          title,
+          description: input.description?.trim() || null,
+          type: input.type,
+          priority: input.priority,
+          status: assignedTo ? "assigned" : "open",
+          nodeId,
+          assignedTo,
+          dueOn: input.dueOn ?? null,
+          createdBy: user.id,
+          createdAt: now,
+        })
+        .returning({ id: workOrders.id })
+        .get();
+      return { id: inserted.id, code };
+    });
+
+  let row: { id: number; code: string } | null = null;
+  for (let tries = 0; tries < 5; tries++) {
+    try {
+      row = allocate();
+      break;
+    } catch (err) {
+      const msg = String((err as Error)?.message ?? "");
+      if (msg.includes("UNIQUE") && tries < 4) continue;
+      throw err;
+    }
+  }
+  if (!row) throw new Error("CONFLICT: could not allocate a work order code");
 
   audit(user.id, "wo.create", "work_order", row.id, {
-    code,
+    code: row.code,
     priority: input.priority,
     nodeId,
   });

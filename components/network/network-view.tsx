@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ZONE_STROKE } from "@/lib/constants";
+import { useLiveNodes } from "@/lib/live/provider";
 import type { NetworkGraph } from "@/lib/repo/network";
 import type { NodeStatus, Role, Zone } from "@/lib/schema";
 import { GasNode, type GasFlowNode } from "./gas-node";
@@ -99,54 +100,38 @@ export function NetworkView({
   const [query, setQuery] = useState("");
   const rfRef = useRef<ReactFlowInstance<GasFlowNode, Edge> | null>(null);
 
-  /* live merge — polled node badges (p, f, status, alarm count) */
+  /* live merge — shared poll of /api/live/nodes; badges (p, f, status, alarms) */
+  const live = useLiveNodes<{ ts: number; nodes: NetworkGraph["nodes"] }>();
   useEffect(() => {
-    let alive = true;
-    const load = async () => {
-      try {
-        const res = await fetch("/api/live/nodes", { cache: "no-store" });
-        if (!res.ok) return;
-        const body = (await res.json()) as {
-          nodes: NetworkGraph["nodes"];
+    if (!live?.nodes) return;
+    const byId = new Map(live.nodes.map((n) => [n.id, n]));
+    setNodes((prev) =>
+      prev.map((node) => {
+        const l = byId.get(Number(node.id));
+        if (!l) return node;
+        const d = node.data;
+        if (
+          d.p === l.p &&
+          d.f === l.f &&
+          d.status === l.status &&
+          d.openAlarms === l.openAlarms
+        ) {
+          return node;
+        }
+        return {
+          ...node,
+          data: {
+            ...d,
+            p: l.p,
+            f: l.f,
+            ts: l.ts,
+            status: l.status,
+            openAlarms: l.openAlarms,
+          },
         };
-        if (!alive) return;
-        const byId = new Map(body.nodes.map((n) => [n.id, n]));
-        setNodes((prev) =>
-          prev.map((node) => {
-            const live = byId.get(Number(node.id));
-            if (!live) return node;
-            const d = node.data;
-            if (
-              d.p === live.p &&
-              d.f === live.f &&
-              d.status === live.status &&
-              d.openAlarms === live.openAlarms
-            ) {
-              return node;
-            }
-            return {
-              ...node,
-              data: {
-                ...d,
-                p: live.p,
-                f: live.f,
-                ts: live.ts,
-                status: live.status,
-                openAlarms: live.openAlarms,
-              },
-            };
-          })
-        );
-      } catch {
-        /* transient */
-      }
-    };
-    const id = setInterval(load, 5000);
-    return () => {
-      alive = false;
-      clearInterval(id);
-    };
-  }, [setNodes]);
+      })
+    );
+  }, [live, setNodes]);
 
   /* filters as derived visibility (positions & data stay untouched) */
   const { displayNodes, displayEdges } = useMemo((): {
