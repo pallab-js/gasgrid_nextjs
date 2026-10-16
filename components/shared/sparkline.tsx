@@ -36,8 +36,12 @@ export function Sparkline({
   const max = Math.max(...data);
   const span = max - min || 1;
 
-  const x = (i: number) => (i / (data.length - 1)) * w;
-  const y = (v: number) => pad + (1 - (v - min) / span) * (height - pad * 2);
+  // Round to a fixed precision so SSR and client renders emit byte-identical
+  // coordinate strings (raw float division can drift in trailing digits across
+  // JS engines, causing an SVG hydration mismatch).
+  const f = (n: number) => Math.round(n * 1000) / 1000;
+  const x = (i: number) => f((i / (data.length - 1)) * w);
+  const y = (v: number) => f(pad + (1 - (v - min) / span) * (height - pad * 2));
 
   const line = data.map((v, i) => `${x(i)},${y(v)}`).join(" ");
   const area = `M ${x(0)},${height} L ${line.split(" ").join(" L ")} L ${x(data.length - 1)},${height} Z`;
