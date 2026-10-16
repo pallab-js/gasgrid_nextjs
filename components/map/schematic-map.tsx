@@ -46,18 +46,23 @@ export function SchematicMap({
   const mapRef = useRef<import("leaflet").Map | null>(null);
   const markersRef = useRef<Map<number, import("leaflet").Marker>>(new Map());
   const consumersRef = useRef<import("leaflet").LayerGroup | null>(null);
-  const liveNodesRef = useRef(initial.nodes);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [ready, setReady] = useState(false);
 
-  const centerOnNode = useCallback((id: number) => {
-    const node = liveNodesRef.current.find((n) => n.id === id);
-    const map = mapRef.current;
-    if (!node || !map) return;
-    map.flyTo([node.lat, node.lng], Math.max(map.getZoom(), 13.5), {
-      duration: 0.6,
-    });
-  }, []);
+  const centerOnNode = useCallback(
+    (id: number) => {
+      // Coordinates come from the SSR snapshot (`initial.nodes`), which always
+      // carries lat/lng. The live /api/live/nodes payload only refreshes
+      // dynamic fields (status, alarms, pressure) and has no lat/lng.
+      const node = initial.nodes.find((n) => n.id === id);
+      const map = mapRef.current;
+      if (!node || node.lat == null || node.lng == null || !map) return;
+      map.flyTo([node.lat, node.lng], Math.max(map.getZoom(), 13.5), {
+        duration: 0.6,
+      });
+    },
+    [initial.nodes]
+  );
 
   /* open drawer + centre when arriving with ?node=id (after the map is ready) */
   useEffect(() => {
@@ -248,10 +253,12 @@ export function SchematicMap({
   }, []);
 
   /* live node badges (status ring, alarm count) — shared poll of /api/live/nodes */
-  const liveNodes = useLiveNodes<{ ts: number; nodes: MapData["nodes"] }>();
+  const liveNodes = useLiveNodes<{
+    ts: number;
+    nodes: { id: number; status: string; openAlarms: number }[];
+  }>();
   useEffect(() => {
     if (!ready || !liveNodes?.nodes) return;
-    liveNodesRef.current = liveNodes.nodes;
     const byId = new Map(liveNodes.nodes.map((n) => [n.id, n]));
     for (const [id, marker] of markersRef.current) {
       const n = byId.get(id);
