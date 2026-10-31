@@ -57,19 +57,30 @@ const dtTimeFmt = new Intl.DateTimeFormat("en-IN", {
   timeZone: DISPLAY_TZ,
 });
 
+const DISPLAY_TZ_OFFSET = 5.5 * 60 * 60 * 1000; // Asia/Kolkata
+
+function kolkata(d: Date) {
+  return new Date(d.getTime() + DISPLAY_TZ_OFFSET);
+}
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 export function fmtDate(ts: number | null | undefined): string {
   if (!ts) return "—";
-  return dtFmt.format(new Date(ts));
+  const d = kolkata(new Date(ts));
+  return `${String(d.getUTCDate()).padStart(2, "0")} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
 }
 
 export function fmtTime(ts: number | null | undefined): string {
   if (!ts) return "—";
-  return timeFmt.format(new Date(ts));
+  const d = kolkata(new Date(ts));
+  return `${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}`;
 }
 
 export function fmtDateTime(ts: number | null | undefined): string {
   if (!ts) return "—";
-  return dtTimeFmt.format(new Date(ts));
+  const d = kolkata(new Date(ts));
+  return `${String(d.getUTCDate()).padStart(2, "0")} ${MONTHS[d.getUTCMonth()]} ${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}`;
 }
 
 export function timeAgo(ts: number | null | undefined): string {
