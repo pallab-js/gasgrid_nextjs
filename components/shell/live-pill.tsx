@@ -34,7 +34,7 @@ export function LivePill({ className }: { className?: string }) {
         "flex h-8 items-center gap-2 rounded-lg border border-border bg-muted/60 px-2.5 text-xs",
         className
       )}
-      title={status ? `Last update ${new Date(status.ts).toLocaleTimeString("en-IN")}` : undefined}
+      title={status ? `Last update ${new Date(status.ts).toLocaleTimeString("en-IN", { timeZone: "Asia/Kolkata" })}` : undefined}
     >
       <span className="relative flex size-2">
         <span
