@@ -45,6 +45,22 @@ const pick = <T>(arr: readonly T[]): T => arr[Math.floor(rnd() * arr.length)];
 const between = (lo: number, hi: number) => lo + rnd() * (hi - lo);
 const rint = (lo: number, hi: number) => Math.floor(between(lo, hi + 1));
 
+/**
+ * Random date between Jan 1 of `minYear` and today, never in the future.
+ * Keeps seeded asset dates current instead of freezing them to a past year.
+ */
+function pastDate(minYear: number, now: number): number {
+  const end = new Date(now);
+  const year = rint(minYear, end.getFullYear());
+  const maxMonth = year === end.getFullYear() ? end.getMonth() : 11;
+  const month = rint(0, maxMonth);
+  const maxDay =
+    year === end.getFullYear() && month === end.getMonth()
+      ? end.getDate()
+      : 28;
+  return new Date(year, month, rint(1, maxDay)).getTime();
+}
+
 /* ───────────────────────── helpers ───────────────────────── */
 
 const HOUR = 3600_000;
@@ -265,7 +281,7 @@ function runSeed(db: Db) {
       gx: d.gx,
       gy: d.gy,
       address: d.address ?? null,
-      commissionedOn: new Date(rint(2016, 2023), rint(0, 11), rint(1, 28)).getTime(),
+      commissionedOn: pastDate(2016, now),
       notes: null,
       meta: {
         inlet: d.inletSet,
@@ -312,7 +328,7 @@ function runSeed(db: Db) {
         diameterMm: s.dia,
         lengthM,
         maopBar: s.maop,
-        laidOn: new Date(rint(2016, 2023), rint(0, 11), rint(1, 28)).getTime(),
+        laidOn: pastDate(2016, now),
         status: (s.status ?? "operational") as NodeStatus,
         routeName: s.route ?? s.code,
         shape: {
@@ -397,7 +413,7 @@ function runSeed(db: Db) {
           lat: anchor.lat + between(-0.012, 0.012),
           lng: anchor.lng + between(-0.014, 0.014),
           address: `${rint(1, 220)}, ${locality}, Guwahati, Assam`,
-          connectedOn: new Date(rint(2017, 2025), rint(0, 11), rint(1, 28)).getTime(),
+          connectedOn: pastDate(2017, now),
           approvedLoadSm3h: between(load[cat][0], load[cat][1]),
           meterSerial: `NM${rint(100000, 999999)}`,
           tariffGroup: cat.slice(0, 3).toUpperCase(),
@@ -406,7 +422,7 @@ function runSeed(db: Db) {
     }
     const insertedConsumers = tx.insert(consumers).values(consumerRows).returning().all();
 
-    // 6 months of readings (Apr 2026 → Sep 2026)
+    // Rolling 6 months of readings, ending with the current month.
     const periods: string[] = [];
     for (let m = 5; m >= 0; m--) {
       const d = new Date(today.getFullYear(), today.getMonth() - m, 1);
