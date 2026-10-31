@@ -14,13 +14,14 @@ export function LivePill({ className }: { className?: string }) {
 
   // Local 5s ticker (no network) so the stale indicator updates even when the
   // shared stream has gone quiet. `now` is state, not a render-time Date.now().
-  const [now, setNow] = useState(() => Date.now());
+  const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
+    setNow(Date.now());
     const id = setInterval(() => setNow(Date.now()), 5_000);
     return () => clearInterval(id);
   }, []);
 
-  const online = status == null ? null : now - status.ts <= STALE_AFTER_MS;
+  const online = status == null || now == null ? null : now - status.ts <= STALE_AFTER_MS;
 
   const critical = status?.openCritical ?? 0;
 
