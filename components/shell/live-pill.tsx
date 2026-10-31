@@ -16,9 +16,12 @@ export function LivePill({ className }: { className?: string }) {
   // shared stream has gone quiet. `now` is state, not a render-time Date.now().
   const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
-    setNow(Date.now());
+    const kick = setTimeout(() => setNow(Date.now()), 0);
     const id = setInterval(() => setNow(Date.now()), 5_000);
-    return () => clearInterval(id);
+    return () => {
+      clearTimeout(kick);
+      clearInterval(id);
+    };
   }, []);
 
   const online = status == null || now == null ? null : now - status.ts <= STALE_AFTER_MS;
