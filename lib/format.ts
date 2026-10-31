@@ -31,15 +31,22 @@ export function inrFull(amount: number | null | undefined): string {
   return `₹${inNumber.format(Math.round(amount))}`;
 }
 
+// Pin display formatting to the operating region. Without an explicit
+// timeZone, Node (server) and the browser can resolve different zones, which
+// makes SSR text disagree with the first client render (React hydration #418).
+const DISPLAY_TZ = "Asia/Kolkata";
+
 const dtFmt = new Intl.DateTimeFormat("en-IN", {
   day: "2-digit",
   month: "short",
   year: "numeric",
+  timeZone: DISPLAY_TZ,
 });
 const timeFmt = new Intl.DateTimeFormat("en-IN", {
   hour: "2-digit",
   minute: "2-digit",
   hour12: false,
+  timeZone: DISPLAY_TZ,
 });
 const dtTimeFmt = new Intl.DateTimeFormat("en-IN", {
   day: "2-digit",
@@ -47,6 +54,7 @@ const dtTimeFmt = new Intl.DateTimeFormat("en-IN", {
   hour: "2-digit",
   minute: "2-digit",
   hour12: false,
+  timeZone: DISPLAY_TZ,
 });
 
 export function fmtDate(ts: number | null | undefined): string {
