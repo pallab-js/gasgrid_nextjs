@@ -11,9 +11,7 @@ export default function OverviewPage() {
         title="Overview"
         description="Network-wide live status and analytics"
       />
-      <div className="mt-5">
-        <DashboardView initial={data} />
-      </div>
+      <DashboardView initial={data} />
     </PageContainer>
   );
 }
