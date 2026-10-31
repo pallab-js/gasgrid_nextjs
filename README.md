@@ -43,8 +43,6 @@ No cloud, no Docker.
   jumping straight to the main content area.
 - Status badges and dots use a shared, consistent color scale across the
   network graph, map, stations register, and alarms console.
-- Network graph and map pages now share the same page container and heading
-  treatment as the rest of the app.
 
 ## Stack
 
