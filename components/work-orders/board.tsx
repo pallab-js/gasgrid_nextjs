@@ -48,7 +48,8 @@ import {
   WO_STATUS_LABELS,
   WO_TYPE_LABELS,
 } from "@/lib/constants";
-import { fmtDate, timeAgo } from "@/lib/format";
+import { RelativeTime } from "@/components/shared/relative-time";
+import { fmtDate } from "@/lib/format";
 import {
   PRIORITIES,
   WO_TYPES,
@@ -183,7 +184,12 @@ function WoCard({
           {row.dueOn
             ? `due ${fmtDate(row.dueOn)}${overdue ? " · overdue" : ""}`
             : "no due date"}
-          {terminal && row.closedAt ? ` · closed ${timeAgo(row.closedAt)}` : ""}
+          {terminal && row.closedAt ? (
+            <>
+              {" · closed "}
+              <RelativeTime ts={row.closedAt} />
+            </>
+          ) : null}
         </p>
       </div>
     </div>

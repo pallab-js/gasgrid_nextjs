@@ -24,7 +24,8 @@ import {
   WO_STATUS_LABELS,
   ZONE_LABELS,
 } from "@/lib/constants";
-import { fmtDate, fmtInt, timeAgo } from "@/lib/format";
+import { RelativeTime } from "@/components/shared/relative-time";
+import { fmtDate, fmtInt } from "@/lib/format";
 import type { NodeDetailPayload } from "@/lib/repo/node-detail";
 import type { NodeStatus, Role } from "@/lib/schema";
 import { Gauge } from "@/components/shared/gauge";
@@ -186,7 +187,13 @@ export function NodeDrawer({
                     />
                     <div className="flex justify-between text-[11px] text-muted-foreground">
                       <span>1 h flow</span>
-                      <span>{n.latest ? timeAgo(n.latest.ts) : "no data"}</span>
+                      <span>
+                        {n.latest ? (
+                          <RelativeTime ts={n.latest.ts} />
+                        ) : (
+                          "no data"
+                        )}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -285,7 +292,7 @@ export function NodeDrawer({
                           {a.severity}
                         </Badge>
                         <span className="text-[11px] text-muted-foreground">
-                          {timeAgo(a.ts)}
+                          <RelativeTime ts={a.ts} />
                         </span>
                         <span className="ml-auto text-[11px] text-muted-foreground">
                           {ALARM_STATUS_LABELS[a.status]}

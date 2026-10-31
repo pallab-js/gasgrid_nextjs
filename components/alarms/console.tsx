@@ -36,10 +36,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { RelativeTime } from "@/components/shared/relative-time";
 import { ackAlarmAction, resolveAlarmAction } from "@/lib/actions/alarms";
 import { useLiveAlarms, useLiveRefetch } from "@/lib/live/provider";
 import { ALARM_TYPE_LABELS, SEVERITY_TONE } from "@/lib/constants";
-import { fmtDateTime, timeAgo } from "@/lib/format";
+import { fmtDateTime } from "@/lib/format";
 import type { AlarmsPage as AlarmsPageData } from "@/lib/repo/alarms";
 import {
   ALARM_TYPES,
@@ -346,7 +347,7 @@ export function AlarmsConsole({
                     <td className="py-2.5 pr-3 text-xs whitespace-nowrap">
                       {fmtDateTime(r.ts)}
                       <span className="block text-[11px] text-muted-foreground">
-                        {timeAgo(r.ts)}
+                        <RelativeTime ts={r.ts} />
                       </span>
                     </td>
                     <td className="py-2.5 pr-3 text-xs">
@@ -395,7 +396,7 @@ export function AlarmsConsole({
                         {r.status === "resolved" ? (
                           <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
                             <CircleDot className="size-3" />
-                            {r.resolvedAt ? timeAgo(r.resolvedAt) : ""}
+                            <RelativeTime ts={r.resolvedAt} fallback="" />
                           </span>
                         ) : null}
                       </span>

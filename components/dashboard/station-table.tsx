@@ -18,12 +18,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { RelativeTime } from "@/components/shared/relative-time";
 import {
   NODE_KIND_SHORT,
   NODE_STATUS_LABELS,
   ZONE_LABELS,
 } from "@/lib/constants";
-import { fmtDec, fmtInt, timeAgo } from "@/lib/format";
+import { fmtDec, fmtInt } from "@/lib/format";
 import type { Overview } from "@/lib/repo/overview";
 import type { NodeStatus } from "@/lib/schema";
 
@@ -98,7 +99,7 @@ export function StationTable({
                     {s.f != null ? fmtInt(s.f) : "—"}
                   </TableCell>
                   <TableCell className="text-xs text-muted-foreground">
-                    {s.ts != null ? timeAgo(s.ts) : "—"}
+                    <RelativeTime ts={s.ts} />
                   </TableCell>
                 </TableRow>
               ))}

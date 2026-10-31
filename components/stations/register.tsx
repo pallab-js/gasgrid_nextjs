@@ -26,7 +26,8 @@ import {
   NODE_STATUS_LABELS,
   ZONE_LABELS,
 } from "@/lib/constants";
-import { fmtDec, fmtInt, timeAgo } from "@/lib/format";
+import { RelativeTime } from "@/components/shared/relative-time";
+import { fmtDec, fmtInt } from "@/lib/format";
 import type { StationsRegister } from "@/lib/repo/stations";
 import type { NetworkGraph } from "@/lib/repo/network";
 import { useLiveNodes } from "@/lib/live/provider";
@@ -254,7 +255,7 @@ export function StationsRegister({ initial }: { initial: StationsRegister }) {
                     )}
                   </TableCell>
                   <TableCell className="text-xs text-muted-foreground">
-                    {r.ts != null ? timeAgo(r.ts) : "—"}
+                    <RelativeTime ts={r.ts} />
                   </TableCell>
                 </TableRow>
               ))}

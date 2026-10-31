@@ -32,7 +32,8 @@ import {
   setSimulatorAction,
   updateUserAction,
 } from "@/lib/actions/settings";
-import { fmtDateTime, timeAgo } from "@/lib/format";
+import { RelativeTime } from "@/components/shared/relative-time";
+import { fmtDateTime } from "@/lib/format";
 import type { SettingsPage, Thresholds } from "@/lib/repo/settings";
 import type { Role } from "@/lib/schema";
 import { cn } from "cn";
@@ -455,7 +456,9 @@ export function SettingsView({ initial }: { initial: SettingsPage }) {
                   <tr key={a.id}>
                     <td className="py-1.5 pr-3 whitespace-nowrap text-muted-foreground">
                       {fmtDateTime(a.ts)}{" "}
-                      <span className="text-[10px]">({timeAgo(a.ts)})</span>
+                      <span className="text-[10px]">
+                        (<RelativeTime ts={a.ts} />)
+                      </span>
                     </td>
                     <td className="py-1.5 pr-3 font-mono">
                       {a.username ?? "—"}

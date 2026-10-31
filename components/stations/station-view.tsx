@@ -30,7 +30,8 @@ import {
   WO_STATUS_LABELS,
   ZONE_LABELS,
 } from "@/lib/constants";
-import { fmtDate, fmtInt, timeAgo } from "@/lib/format";
+import { RelativeTime } from "@/components/shared/relative-time";
+import { fmtDate, fmtInt } from "@/lib/format";
 import type { StationPage } from "@/lib/repo/stations";
 import type { NodeDetailPayload } from "@/lib/repo/node-detail";
 import type { Role } from "@/lib/schema";
@@ -144,7 +145,13 @@ export function StationView({
               View on map
             </Link>
             <p className="text-[11px] text-muted-foreground">
-              {latestTs ? `last seen ${timeAgo(latestTs)}` : "no telemetry"}
+              {latestTs ? (
+                <>
+                  last seen <RelativeTime ts={latestTs} />
+                </>
+              ) : (
+                "no telemetry"
+              )}
             </p>
           </div>
         </CardContent>
@@ -360,7 +367,7 @@ export function StationView({
                         <p className="text-[13px]">{a.message}</p>
                         <p className="mt-0.5 text-[11px] text-muted-foreground">
                           {ALARM_TYPE_LABELS[a.type]} · {fmtDate(a.ts)} ·{" "}
-                          {timeAgo(a.ts)} · {ALARM_STATUS_LABELS[a.status]}
+                          <RelativeTime ts={a.ts} /> · {ALARM_STATUS_LABELS[a.status]}
                         </p>
                       </div>
                       {a.status === "open" && canAct ? (

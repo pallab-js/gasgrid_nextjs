@@ -11,9 +11,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { RelativeTime } from "@/components/shared/relative-time";
 import { ALARM_STATUS_LABELS } from "@/lib/constants";
 import type { Severity } from "@/lib/schema";
-import { timeAgo } from "@/lib/format";
 import type { Overview } from "@/lib/repo/overview";
 
 const DOT: Record<Severity, string> = {
@@ -74,7 +74,7 @@ export function AlarmFeed({
                       {a.code}
                     </Badge>
                     <span className="text-xs text-muted-foreground">
-                      {timeAgo(a.ts)}
+                      <RelativeTime ts={a.ts} />
                     </span>
                   </div>
                   <p className="mt-0.5 truncate text-[13px]" title={a.message}>
