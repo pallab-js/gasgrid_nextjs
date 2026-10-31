@@ -18,7 +18,6 @@ import { ackAlarmAction } from "@/lib/actions/alarms";
 import {
   ALARM_STATUS_LABELS,
   ALARM_TYPE_LABELS,
-  NODE_STATUS_LABELS,
   PRIORITY_LABELS,
   PRIORITY_TONE,
   SEVERITY_TONE,
@@ -27,19 +26,12 @@ import {
 } from "@/lib/constants";
 import { fmtDate, fmtInt, timeAgo } from "@/lib/format";
 import type { NodeDetailPayload } from "@/lib/repo/node-detail";
-import type { Role } from "@/lib/schema";
+import type { NodeStatus, Role } from "@/lib/schema";
 import { Gauge } from "@/components/shared/gauge";
 import { Sparkline } from "@/components/shared/sparkline";
+import { StatusBadge } from "@/components/shared/status-badge";
 
 const STATION_KINDS = ["CGS", "DPRS", "CNG", "MRS", "IPRS"];
-
-const STATUS_BADGE: Record<string, string> = {
-  operational: "bg-success/10 text-success border-success/30",
-  maintenance: "bg-warning/10 text-warning border-warning/30",
-  isolated: "bg-muted text-muted-foreground border-border",
-  faulty: "bg-destructive/10 text-destructive border-destructive/30",
-  planned: "bg-info/10 text-info border-info/30",
-};
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -137,9 +129,7 @@ export function NodeDrawer({
                 <Badge variant="outline" className="font-mono">
                   {n.node!.code}
                 </Badge>
-                <Badge variant="outline" className={STATUS_BADGE[n.node!.status]}>
-                  {NODE_STATUS_LABELS[n.node!.status as keyof typeof NODE_STATUS_LABELS] ?? n.node!.status}
-                </Badge>
+                <StatusBadge status={n.node!.status as NodeStatus} />
               </div>
               <div className="flex items-start justify-between gap-2">
                 <div>

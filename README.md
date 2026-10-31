@@ -37,6 +37,15 @@ No cloud, no Docker.
 - **Live telemetry simulator** — background process (toggleable) producing
   diurnal demand, drift and threshold alarms so every screen stays alive
 
+## Accessibility
+
+- A **skip-to-content** link is available keyboard-first (Tab) on every page,
+  jumping straight to the main content area.
+- Status badges and dots use a shared, consistent color scale across the
+  network graph, map, stations register, and alarms console.
+- Network graph and map pages now share the same page container and heading
+  treatment as the rest of the app.
+
 ## Stack
 
 Next.js 16 (App Router, Turbopack) · React 19 · TypeScript (strict) ·

@@ -6,7 +6,18 @@ import { getConsumerDetail } from "@/lib/repo/consumers";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = { title: "Consumer" };
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id: raw } = await params;
+  const id = Number(raw);
+  if (!Number.isInteger(id)) return { title: "Consumer" };
+  const data = getConsumerDetail(id);
+  if (!data) return { title: "Consumer" };
+  return { title: data.consumer.name };
+}
 
 export default async function ConsumerDetailPage({
   params,

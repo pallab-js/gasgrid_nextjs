@@ -7,7 +7,18 @@ import { getStationPage } from "@/lib/repo/stations";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = { title: "Station" };
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id: raw } = await params;
+  const id = Number(raw);
+  if (!Number.isInteger(id)) return { title: "Station" };
+  const data = await getStationPage(id);
+  if (!data) return { title: "Station" };
+  return { title: data.node.name };
+}
 
 export default async function StationDetailPage({
   params,

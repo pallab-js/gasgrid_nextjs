@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowDown, ArrowUp, Search } from "lucide-react";
 import { cn } from "cn";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -33,14 +32,7 @@ import type { NetworkGraph } from "@/lib/repo/network";
 import { useLiveNodes } from "@/lib/live/provider";
 import type { NodeKind, NodeStatus, Zone } from "@/lib/schema";
 import { Sparkline } from "@/components/shared/sparkline";
-
-const STATUS_BADGE: Record<NodeStatus, string> = {
-  operational: "bg-success/10 text-success border-success/30",
-  maintenance: "bg-warning/10 text-warning border-warning/30",
-  isolated: "bg-muted text-muted-foreground border-border",
-  faulty: "bg-destructive/10 text-destructive border-destructive/30",
-  planned: "bg-info/10 text-info border-info/30",
-};
+import { StatusBadge } from "@/components/shared/status-badge";
 
 type SortKey = "code" | "kind" | "zone" | "status" | "p" | "f" | "alarms";
 
@@ -236,9 +228,7 @@ export function StationsRegister({ initial }: { initial: StationsRegister }) {
                     {ZONE_LABELS[r.zone]}
                   </TableCell>
                   <TableCell>
-                    <Badge variant="outline" className={STATUS_BADGE[r.status]}>
-                      {NODE_STATUS_LABELS[r.status]}
-                    </Badge>
+                    <StatusBadge status={r.status} />
                   </TableCell>
                   <TableCell className="text-right font-mono text-xs tnum">
                     {r.p != null ? `${fmtDec(r.p)} bar` : "—"}

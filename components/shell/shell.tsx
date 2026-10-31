@@ -67,7 +67,7 @@ export function Shell({
           </div>
         </header>
 
-        <main className="min-h-0 flex-1 overflow-y-auto">{children}</main>
+        <main id="main-content" className="min-h-0 flex-1 overflow-y-auto">{children}</main>
       </div>
 
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>

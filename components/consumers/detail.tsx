@@ -73,7 +73,7 @@ export function ConsumerDetail({ data }: { data: ConsumerDetail }) {
               )}
             </p>
             <p className="mt-0.5">
-              {data.lat.toFixed(5)}, {data.lng.toFixed(5)}
+              {data.lat.toFixed(3)}, {data.lng.toFixed(3)}
             </p>
           </div>
         </CardContent>

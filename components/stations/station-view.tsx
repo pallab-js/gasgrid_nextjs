@@ -24,7 +24,6 @@ import {
   ALARM_STATUS_LABELS,
   ALARM_TYPE_LABELS,
   NODE_KIND_LABELS,
-  NODE_STATUS_LABELS,
   PRIORITY_LABELS,
   PRIORITY_TONE,
   SEVERITY_TONE,
@@ -36,14 +35,7 @@ import type { StationPage } from "@/lib/repo/stations";
 import type { NodeDetailPayload } from "@/lib/repo/node-detail";
 import type { Role } from "@/lib/schema";
 import { Gauge } from "@/components/shared/gauge";
-
-const STATUS_BADGE: Record<string, string> = {
-  operational: "bg-success/10 text-success border-success/30",
-  maintenance: "bg-warning/10 text-warning border-warning/30",
-  isolated: "bg-muted text-muted-foreground border-border",
-  faulty: "bg-destructive/10 text-destructive border-destructive/30",
-  planned: "bg-info/10 text-info border-info/30",
-};
+import { StatusBadge } from "@/components/shared/status-badge";
 
 function fmtTick(ts: number, bucketMs: number) {
   const d = new Date(ts);
@@ -120,9 +112,7 @@ export function StationView({
               <Badge variant="outline" className="font-mono">
                 {data.node.code}
               </Badge>
-              <Badge variant="outline" className={STATUS_BADGE[data.node.status]}>
-                {NODE_STATUS_LABELS[data.node.status]}
-              </Badge>
+              <StatusBadge status={data.node.status} />
               <Badge variant="secondary">{NODE_KIND_LABELS[data.node.kind]}</Badge>
               <Badge variant="secondary">{ZONE_LABELS[data.node.zone]}</Badge>
               {openAlarms.length > 0 ? (
@@ -268,7 +258,7 @@ export function StationView({
             ) : null}
             <Separator />
             <p className="text-[11px] text-muted-foreground">
-              Coordinates {data.node.lat.toFixed(5)}, {data.node.lng.toFixed(5)}
+              Coordinates {data.node.lat.toFixed(3)}, {data.node.lng.toFixed(3)}
             </p>
           </CardContent>
         </Card>
