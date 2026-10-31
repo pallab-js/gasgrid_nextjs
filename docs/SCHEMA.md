@@ -50,7 +50,7 @@ mutation (login/logout, alarm ack/resolve, WO create/update, user changes, setti
 | kind | text | `CGS` \| `DPRS` \| `IPRS` \| `CNG` \| `MRS` \| `VALVE` \| `JUNCTION` \| `ODORISER` |
 | zone | text | `primary` \| `secondary` \| `tertiary` |
 | status | text | `operational` \| `maintenance` \| `isolated` \| `faulty` \| `planned` |
-| lat / lng | real | map coordinates (Nashik area) |
+| lat / lng | real | map coordinates (Guwahati area) |
 | gx / gy | real | graph layout coordinates |
 | address, commissioned_on, notes | | |
 | meta | text JSON | kind-specific attributes |
@@ -103,7 +103,7 @@ closed_at`
 `key PK, value JSON` — `company_name`, `simulator_enabled`, `simulator_interval_ms`,
 `alarm_thresholds`, …
 
-## Seeded demo data (Aurum Gas Grid, Nashik)
+## Seeded demo data (Aurum Gas Grid, Guwahati / Northeast India)
 
 - **Nodes (≈28):** 2 CGS, 6 DPRS, 4 CNG, 1 MRS, 1 odoriser, ~10 valve/junction.
 - **Segments (≈45):** steel primary ring (Ø 200–300 mm), PE secondary mains

@@ -1,5 +1,5 @@
 /**
- * Deterministic demo seed for GasNext — "Aurum Gas Grid", Nashik licence area.
+ * Deterministic demo seed for GasNext — "Aurum Gas Grid", Assam (Northeast India) licence area.
  * Runs only when the `nodes` table is empty (idempotent).
  */
 import { sql } from "drizzle-orm";
@@ -94,42 +94,42 @@ type NodeDef = {
   manufacturer?: string;
 };
 
-// Nashik bbox ≈ lat 19.95–20.06, lng 73.72–73.87
+// Guwahati metropolitan licence area — bbox ≈ lat 26.11–26.20, lng 91.69–91.82
 const NODE_DEFS: NodeDef[] = [
   // ── City gate stations (primary) ──
-  { code: "CGS-01", name: "Ambad City Gate Station", kind: "CGS", zone: "primary", lat: 20.0355, lng: 73.8352, gx: 1399, gy: 147, address: "Ambad MIDC, Nashik", capacity: 8.5, inletSet: 42, outletSet: 24, manufacturer: "Cochin Valves" },
-  { code: "CGS-02", name: "Satpur City Gate Station", kind: "CGS", zone: "primary", lat: 20.0105, lng: 73.7352, gx: 180, gy: 240, address: "Satpur MIDC, Nashik", capacity: 6.0, inletSet: 40, outletSet: 24, manufacturer: "Cochin Valves" },
+  { code: "CGS-01", name: "Jalukbari City Gate Station", kind: "CGS", zone: "primary", lat: 26.1180, lng: 91.7480, gx: 1399, gy: 147, address: "Jalukbari, Guwahati, Assam", capacity: 8.5, inletSet: 42, outletSet: 24, manufacturer: "Brahmaputra Valves" },
+  { code: "CGS-02", name: "Amingaon City Gate Station", kind: "CGS", zone: "primary", lat: 26.1850, lng: 91.7000, gx: 180, gy: 240, address: "Amingaon, North Guwahati, Assam", capacity: 6.0, inletSet: 40, outletSet: 24, manufacturer: "Brahmaputra Valves" },
   // ── District regulating stations (secondary) ──
-  { code: "DPRS-01", name: "Indira Nagar DPRS", kind: "DPRS", zone: "secondary", lat: 20.0168, lng: 73.8147, gx: 900, gy: 375, address: "Indira Nagar, Nashik", capacity: 1.6, inletSet: 22, outletSet: 4.0 },
-  { code: "DPRS-02", name: "College Road DPRS", kind: "DPRS", zone: "secondary", lat: 19.9965, lng: 73.7664, gx: 435, gy: 329, address: "College Road, Nashik", capacity: 1.4, inletSet: 22, outletSet: 4.0 },
-  { code: "DPRS-03", name: "Gangapur Road DPRS", kind: "DPRS", zone: "secondary", lat: 19.9862, lng: 73.7576, gx: 340, gy: 470, address: "Gangapur Road, Nashik", capacity: 1.2, inletSet: 22, outletSet: 3.8 },
-  { code: "DPRS-04", name: "Cidco DPRS", kind: "DPRS", zone: "secondary", lat: 19.9897, lng: 73.8043, gx: 689, gy: 560, address: "Cidco, Nashik", capacity: 1.8, inletSet: 22, outletSet: 4.2 },
-  { code: "DPRS-05", name: "Satpur East DPRS", kind: "DPRS", zone: "secondary", lat: 20.0044, lng: 73.7487, gx: 242, gy: 119, address: "Satpur East, Nashik", capacity: 1.1, inletSet: 22, outletSet: 4.0 },
-  { code: "DPRS-06", name: "Panchavati DPRS", kind: "DPRS", zone: "secondary", lat: 20.0227, lng: 73.7769, gx: 435, gy: 119, address: "Panchavati, Nashik", capacity: 1.3, inletSet: 22, outletSet: 4.0 },
+  { code: "DPRS-01", name: "Beltola DPRS", kind: "DPRS", zone: "secondary", lat: 26.1270, lng: 91.7820, gx: 900, gy: 375, address: "Beltola, Guwahati, Assam", capacity: 1.6, inletSet: 22, outletSet: 4.0 },
+  { code: "DPRS-02", name: "Paltan Bazar DPRS", kind: "DPRS", zone: "secondary", lat: 26.1760, lng: 91.7440, gx: 435, gy: 329, address: "Paltan Bazar, Guwahati, Assam", capacity: 1.4, inletSet: 22, outletSet: 4.0 },
+  { code: "DPRS-03", name: "Chandmari DPRS", kind: "DPRS", zone: "secondary", lat: 26.1680, lng: 91.7600, gx: 340, gy: 470, address: "Chandmari, Guwahati, Assam", capacity: 1.2, inletSet: 22, outletSet: 3.8 },
+  { code: "DPRS-04", name: "Ganeshguri DPRS", kind: "DPRS", zone: "secondary", lat: 26.1450, lng: 91.7780, gx: 689, gy: 560, address: "Ganeshguri, Guwahati, Assam", capacity: 1.8, inletSet: 22, outletSet: 4.2 },
+  { code: "DPRS-05", name: "Maligaon DPRS", kind: "DPRS", zone: "secondary", lat: 26.1580, lng: 91.6970, gx: 242, gy: 119, address: "Maligaon, Guwahati, Assam", capacity: 1.1, inletSet: 22, outletSet: 4.0 },
+  { code: "DPRS-06", name: "Kamakhya DPRS", kind: "DPRS", zone: "secondary", lat: 26.1650, lng: 91.7100, gx: 435, gy: 119, address: "Kamakhya, Guwahati, Assam", capacity: 1.3, inletSet: 22, outletSet: 4.0 },
   // ── CNG stations ──
-  { code: "CNG-01", name: "Ambad Highway CNG", kind: "CNG", zone: "primary", lat: 20.0297, lng: 73.8561, gx: 1345, gy: 356, address: "Mumbai-Agra Hwy, Ambad", capacity: 1.9, inletSet: 24, outletSet: 200 },
-  { code: "CNG-02", name: "Satpur CNG Mother", kind: "CNG", zone: "primary", lat: 20.0188, lng: 73.7236, gx: 95, gy: 405, address: "Satpur Link Rd", capacity: 2.2, inletSet: 24, outletSet: 200 },
-  { code: "CNG-03", name: "Mhasrul CNG", kind: "CNG", zone: "primary", lat: 20.0418, lng: 73.7848, gx: 780, gy: 60, address: "Dindori Rd, Mhasrul", capacity: 1.5, inletSet: 24, outletSet: 200 },
-  { code: "CNG-04", name: "Aashirwad CNG", kind: "CNG", zone: "primary", lat: 19.9696, lng: 73.7998, gx: 864, gy: 745, address: "Aashirwad Circle", capacity: 1.7, inletSet: 24, outletSet: 200 },
+  { code: "CNG-01", name: "Jalukbari Highway CNG", kind: "CNG", zone: "primary", lat: 26.1150, lng: 91.7600, gx: 1345, gy: 356, address: "NH-27, Jalukbari, Guwahati", capacity: 1.9, inletSet: 24, outletSet: 200 },
+  { code: "CNG-02", name: "Amingaon CNG Mother", kind: "CNG", zone: "primary", lat: 26.1850, lng: 91.6900, gx: 95, gy: 405, address: "Amingaon Industrial Estate, Assam", capacity: 2.2, inletSet: 24, outletSet: 200 },
+  { code: "CNG-03", name: "Kamakhya CNG", kind: "CNG", zone: "primary", lat: 26.1650, lng: 91.7000, gx: 780, gy: 60, address: "Kamakhya Gate, Guwahati", capacity: 1.5, inletSet: 24, outletSet: 200 },
+  { code: "CNG-04", name: "Khanapara CNG", kind: "CNG", zone: "primary", lat: 26.1520, lng: 91.7980, gx: 864, gy: 745, address: "GS Road, Khanapara, Guwahati", capacity: 1.7, inletSet: 24, outletSet: 200 },
   // ── Metering / odorisation ──
-  { code: "MRS-01", name: "Ambad Industrial MRS", kind: "MRS", zone: "primary", lat: 20.0444, lng: 73.8244, gx: 1105, gy: 70, address: "Ambad MIDC Phase II", capacity: 3.4, inletSet: 24, outletSet: 18 },
-  { code: "ODR-01", name: "Ambad Odorisation Skid", kind: "ODORISER", zone: "primary", lat: 20.0341, lng: 73.8394, gx: 1398, gy: 251, address: "CGS-01 battery limits" },
+  { code: "MRS-01", name: "Amingaon Industrial MRS", kind: "MRS", zone: "primary", lat: 26.1950, lng: 91.6900, gx: 1105, gy: 70, address: "Amingaon Industrial Estate, Assam", capacity: 3.4, inletSet: 24, outletSet: 18 },
+  { code: "ODR-01", name: "Jalukbari Odorisation Skid", kind: "ODORISER", zone: "primary", lat: 26.1200, lng: 91.7500, gx: 1398, gy: 251, address: "CGS-01 battery limits, Jalukbari" },
   // ── Primary ring junctions ──
-  { code: "JCT-01", name: "Deolali Camp Junction", kind: "JUNCTION", zone: "primary", lat: 20.0226, lng: 73.8331, gx: 1012, gy: 175 },
-  { code: "JCT-02", name: "Mhasrul Junction", kind: "JUNCTION", zone: "primary", lat: 20.0378, lng: 73.7752, gx: 627, gy: 164 },
-  { code: "JCT-03", name: "Cidco Ring Junction", kind: "JUNCTION", zone: "primary", lat: 19.9948, lng: 73.8298, gx: 1075, gy: 545 },
-  { code: "JCT-04", name: "Pathardi Junction", kind: "JUNCTION", zone: "primary", lat: 19.9725, lng: 73.7702, gx: 671, gy: 715 },
-  { code: "JCT-05", name: "Gangapur Holi Junction", kind: "JUNCTION", zone: "primary", lat: 19.9849, lng: 73.7378, gx: 286, gy: 640 },
-  { code: "JCT-06", name: "Nashik Road Hub", kind: "JUNCTION", zone: "primary", lat: 20.0049, lng: 73.7934, gx: 700, gy: 405 },
+  { code: "JCT-01", name: "Jalukbari Junction", kind: "JUNCTION", zone: "primary", lat: 26.1250, lng: 91.7550, gx: 1012, gy: 175 },
+  { code: "JCT-02", name: "Maligaon Junction", kind: "JUNCTION", zone: "primary", lat: 26.1560, lng: 91.6980, gx: 627, gy: 164 },
+  { code: "JCT-03", name: "Ganeshguri Junction", kind: "JUNCTION", zone: "primary", lat: 26.1440, lng: 91.7770, gx: 1075, gy: 545 },
+  { code: "JCT-04", name: "Khanapara Junction", kind: "JUNCTION", zone: "primary", lat: 26.1510, lng: 91.7990, gx: 671, gy: 715 },
+  { code: "JCT-05", name: "Chandmari Junction", kind: "JUNCTION", zone: "primary", lat: 26.1690, lng: 91.7590, gx: 286, gy: 640 },
+  { code: "JCT-06", name: "Paltan Bazar Hub", kind: "JUNCTION", zone: "primary", lat: 26.1740, lng: 91.7410, gx: 700, gy: 405 },
   // ── Valve chambers ──
-  { code: "VLV-01", name: "Ambad Valve Chamber", kind: "VALVE", zone: "primary", lat: 20.0285, lng: 73.8343, gx: 1205, gy: 175 },
-  { code: "VLV-02", name: "Mhasrul Valve Chamber", kind: "VALVE", zone: "primary", lat: 20.0306, lng: 73.8041, gx: 820, gy: 165 },
-  { code: "VLV-03", name: "Satpur Valve Chamber", kind: "VALVE", zone: "primary", lat: 20.0165, lng: 73.7485, gx: 420, gy: 223 },
-  { code: "VLV-04", name: "Cidco Valve Chamber", kind: "VALVE", zone: "primary", lat: 20.0019, lng: 73.8316, gx: 1140, gy: 375 },
-  { code: "VLV-05", name: "Pathardi Valve Chamber", kind: "VALVE", zone: "primary", lat: 19.9833, lng: 73.7741, gx: 881, gy: 630 },
-  { code: "VLV-06", name: "Gangapur Valve Chamber", kind: "VALVE", zone: "primary", lat: 19.9795, lng: 73.7537, gx: 479, gy: 677 },
-  { code: "VLV-07", name: "Nashik Rd Valve Chamber", kind: "VALVE", zone: "primary", lat: 20.0047, lng: 73.7815, gx: 627, gy: 290 },
-  { code: "VLV-08", name: "Indira Nagar Valve Chamber", kind: "VALVE", zone: "secondary", lat: 20.0168, lng: 73.8011, gx: 820, gy: 270 },
+  { code: "VLV-01", name: "Jalukbari Valve Chamber", kind: "VALVE", zone: "primary", lat: 26.1220, lng: 91.7500, gx: 1205, gy: 175 },
+  { code: "VLV-02", name: "Maligaon Valve Chamber", kind: "VALVE", zone: "primary", lat: 26.1570, lng: 91.6960, gx: 820, gy: 165 },
+  { code: "VLV-03", name: "Amingaon Valve Chamber", kind: "VALVE", zone: "primary", lat: 26.1860, lng: 91.6970, gx: 420, gy: 223 },
+  { code: "VLV-04", name: "Ganeshguri Valve Chamber", kind: "VALVE", zone: "primary", lat: 26.1420, lng: 91.7760, gx: 1140, gy: 375 },
+  { code: "VLV-05", name: "Khanapara Valve Chamber", kind: "VALVE", zone: "primary", lat: 26.1520, lng: 91.8000, gx: 881, gy: 630 },
+  { code: "VLV-06", name: "Chandmari Valve Chamber", kind: "VALVE", zone: "primary", lat: 26.1670, lng: 91.7570, gx: 479, gy: 677 },
+  { code: "VLV-07", name: "Paltan Bazar Valve Chamber", kind: "VALVE", zone: "primary", lat: 26.1720, lng: 91.7390, gx: 627, gy: 290 },
+  { code: "VLV-08", name: "Beltola Valve Chamber", kind: "VALVE", zone: "secondary", lat: 26.1300, lng: 91.7840, gx: 820, gy: 270 },
 ];
 
 type SegDef = {
@@ -146,84 +146,85 @@ type SegDef = {
 
 const SEG_DEFS: SegDef[] = [
   // primary steel ring (upper)
-  { code: "SEG-P01", from: "CGS-01", to: "VLV-01", zone: "primary", material: "steel", dia: 300, maop: 42, route: "Ambad link main" },
-  { code: "SEG-P02", from: "VLV-01", to: "JCT-01", zone: "primary", material: "steel", dia: 300, maop: 42, route: "Ambad–Deolali main" },
-  { code: "SEG-P03", from: "JCT-01", to: "VLV-02", zone: "primary", material: "steel", dia: 250, maop: 42, route: "Deolali–Mhasrul main" },
-  { code: "SEG-P04", from: "VLV-02", to: "JCT-02", zone: "primary", material: "steel", dia: 250, maop: 42, route: "Mhasrul main" },
-  { code: "SEG-P05", from: "JCT-02", to: "VLV-03", zone: "primary", material: "steel", dia: 250, maop: 42, route: "Mhasrul–Satpur main" },
-  { code: "SEG-P06", from: "VLV-03", to: "CGS-02", zone: "primary", material: "steel", dia: 300, maop: 42, route: "Satpur approach" },
+  { code: "SEG-P01", from: "CGS-01", to: "VLV-01", zone: "primary", material: "steel", dia: 300, maop: 42, route: "Jalukbari link main" },
+  { code: "SEG-P02", from: "VLV-01", to: "JCT-01", zone: "primary", material: "steel", dia: 300, maop: 42, route: "Jalukbari ring main" },
+  { code: "SEG-P03", from: "JCT-01", to: "VLV-02", zone: "primary", material: "steel", dia: 250, maop: 42, route: "Jalukbari–Maligaon main" },
+  { code: "SEG-P04", from: "VLV-02", to: "JCT-02", zone: "primary", material: "steel", dia: 250, maop: 42, route: "Maligaon main" },
+  { code: "SEG-P05", from: "JCT-02", to: "VLV-03", zone: "primary", material: "steel", dia: 250, maop: 42, route: "Maligaon–Amingaon main" },
+  { code: "SEG-P06", from: "VLV-03", to: "CGS-02", zone: "primary", material: "steel", dia: 300, maop: 42, route: "Amingaon approach" },
   // primary steel ring (lower)
-  { code: "SEG-P07", from: "CGS-01", to: "VLV-04", zone: "primary", material: "steel", dia: 300, maop: 42, route: "Ambad south main" },
-  { code: "SEG-P08", from: "VLV-04", to: "JCT-03", zone: "primary", material: "steel", dia: 300, maop: 42, route: "Cidco ring main" },
-  { code: "SEG-P09", from: "JCT-03", to: "VLV-05", zone: "primary", material: "steel", dia: 250, maop: 42, route: "Cidco–Pathardi main" },
-  { code: "SEG-P10", from: "VLV-05", to: "JCT-04", zone: "primary", material: "steel", dia: 250, maop: 42, route: "Pathardi main" },
-  { code: "SEG-P11", from: "JCT-04", to: "VLV-06", zone: "primary", material: "steel", dia: 250, maop: 42, route: "Pathardi–Gangapur main" },
-  { code: "SEG-P12", from: "VLV-06", to: "JCT-05", zone: "primary", material: "steel", dia: 250, maop: 42, route: "Gangapur main" },
-  { code: "SEG-P13", from: "JCT-05", to: "CGS-02", zone: "primary", material: "steel", dia: 300, maop: 42, route: "Satpur south approach" },
+  { code: "SEG-P07", from: "CGS-01", to: "VLV-04", zone: "primary", material: "steel", dia: 300, maop: 42, route: "Jalukbari–Ganeshguri main" },
+  { code: "SEG-P08", from: "VLV-04", to: "JCT-03", zone: "primary", material: "steel", dia: 300, maop: 42, route: "Ganeshguri ring main" },
+  { code: "SEG-P09", from: "JCT-03", to: "VLV-05", zone: "primary", material: "steel", dia: 250, maop: 42, route: "Ganeshguri–Khanapara main" },
+  { code: "SEG-P10", from: "VLV-05", to: "JCT-04", zone: "primary", material: "steel", dia: 250, maop: 42, route: "Khanapara main" },
+  { code: "SEG-P11", from: "JCT-04", to: "VLV-06", zone: "primary", material: "steel", dia: 250, maop: 42, route: "Khanapara–Chandmari main" },
+  { code: "SEG-P12", from: "VLV-06", to: "JCT-05", zone: "primary", material: "steel", dia: 250, maop: 42, route: "Chandmari main" },
+  { code: "SEG-P13", from: "JCT-05", to: "CGS-02", zone: "primary", material: "steel", dia: 300, maop: 42, route: "Amingaon south approach" },
   // ring cross-links
-  { code: "SEG-P14", from: "JCT-01", to: "VLV-07", zone: "primary", material: "steel", dia: 250, maop: 42, route: "Deolali–Nashik Rd" },
-  { code: "SEG-P15", from: "VLV-07", to: "JCT-06", zone: "primary", material: "steel", dia: 250, maop: 42, route: "Nashik Rd main" },
-  { code: "SEG-P16", from: "JCT-06", to: "JCT-03", zone: "primary", material: "steel", dia: 250, maop: 42, route: "Nashik Rd–Cidco link" },
+  { code: "SEG-P14", from: "JCT-01", to: "VLV-07", zone: "primary", material: "steel", dia: 250, maop: 42, route: "Jalukbari–Paltan Bazar" },
+  { code: "SEG-P15", from: "VLV-07", to: "JCT-06", zone: "primary", material: "steel", dia: 250, maop: 42, route: "Paltan Bazar main" },
+  { code: "SEG-P16", from: "JCT-06", to: "JCT-03", zone: "primary", material: "steel", dia: 250, maop: 42, route: "Paltan Bazar–Ganeshguri link" },
   { code: "SEG-P17", from: "JCT-02", to: "JCT-06", zone: "primary", material: "steel", dia: 200, maop: 42, route: "North–central link" },
   { code: "SEG-P18", from: "JCT-05", to: "JCT-04", zone: "primary", material: "steel", dia: 200, maop: 42, route: "South-west link" },
   // primary spurs
-  { code: "SEG-P19", from: "JCT-01", to: "MRS-01", zone: "primary", material: "steel", dia: 200, maop: 42, route: "Ambad industrial spur" },
+  { code: "SEG-P19", from: "JCT-01", to: "MRS-01", zone: "primary", material: "steel", dia: 200, maop: 42, route: "Amingaon industrial spur" },
   { code: "SEG-P20", from: "JCT-01", to: "ODR-01", zone: "primary", material: "steel", dia: 150, maop: 42, route: "Odoriser feed" },
-  { code: "SEG-P21", from: "CGS-01", to: "CNG-01", zone: "primary", material: "steel", dia: 150, maop: 42, route: "Ambad Hwy CNG spur" },
-  { code: "SEG-P22", from: "CGS-02", to: "CNG-02", zone: "primary", material: "steel", dia: 150, maop: 42, route: "Satpur CNG spur" },
-  { code: "SEG-P23", from: "JCT-02", to: "CNG-03", zone: "primary", material: "steel", dia: 150, maop: 42, route: "Dindori CNG spur" },
-  { code: "SEG-P24", from: "JCT-04", to: "CNG-04", zone: "primary", material: "steel", dia: 150, maop: 42, route: "Aashirwad CNG spur" },
+  { code: "SEG-P21", from: "CGS-01", to: "CNG-01", zone: "primary", material: "steel", dia: 150, maop: 42, route: "Jalukbari Hwy CNG spur" },
+  { code: "SEG-P22", from: "CGS-02", to: "CNG-02", zone: "primary", material: "steel", dia: 150, maop: 42, route: "Amingaon CNG spur" },
+  { code: "SEG-P23", from: "JCT-02", to: "CNG-03", zone: "primary", material: "steel", dia: 150, maop: 42, route: "Kamakhya CNG spur" },
+  { code: "SEG-P24", from: "JCT-04", to: "CNG-04", zone: "primary", material: "steel", dia: 150, maop: 42, route: "Khanapara CNG spur" },
   // secondary PE mains
-  { code: "SEG-S01", from: "JCT-01", to: "DPRS-01", zone: "secondary", material: "PE", dia: 160, maop: 6, route: "Indira Nagar feeder" },
-  { code: "SEG-S02", from: "VLV-08", to: "DPRS-01", zone: "secondary", material: "PE", dia: 110, maop: 6, route: "Indira Nagar branch", status: "maintenance" },
-  { code: "SEG-S03", from: "JCT-06", to: "DPRS-04", zone: "secondary", material: "PE", dia: 160, maop: 6, route: "Cidco feeder" },
-  { code: "SEG-S04", from: "JCT-06", to: "DPRS-02", zone: "secondary", material: "PE", dia: 160, maop: 6, route: "College Rd feeder" },
-  { code: "SEG-S05", from: "DPRS-02", to: "DPRS-03", zone: "secondary", material: "PE", dia: 110, maop: 6, route: "Gangapur branch" },
-  { code: "SEG-S06", from: "JCT-02", to: "DPRS-05", zone: "secondary", material: "PE", dia: 110, maop: 6, route: "Satpur East feeder" },
-  { code: "SEG-S07", from: "JCT-02", to: "DPRS-06", zone: "secondary", material: "PE", dia: 160, maop: 6, route: "Panchavati feeder" },
-  { code: "SEG-S08", from: "JCT-04", to: "DPRS-04", zone: "secondary", material: "PE", dia: 110, maop: 6, route: "Pathardi–Cidco branch" },
-  { code: "SEG-S09", from: "JCT-05", to: "DPRS-03", zone: "secondary", material: "PE", dia: 110, maop: 6, route: "Gangapur south feeder" },
-  { code: "SEG-S10", from: "DPRS-06", to: "DPRS-02", zone: "secondary", material: "PE", dia: 110, maop: 6, route: "Panchavati–College branch" },
+  { code: "SEG-S01", from: "JCT-01", to: "DPRS-01", zone: "secondary", material: "PE", dia: 160, maop: 6, route: "Beltola feeder" },
+  { code: "SEG-S02", from: "VLV-08", to: "DPRS-01", zone: "secondary", material: "PE", dia: 110, maop: 6, route: "Beltola branch", status: "maintenance" },
+  { code: "SEG-S03", from: "JCT-06", to: "DPRS-04", zone: "secondary", material: "PE", dia: 160, maop: 6, route: "Ganeshguri feeder" },
+  { code: "SEG-S04", from: "JCT-06", to: "DPRS-02", zone: "secondary", material: "PE", dia: 160, maop: 6, route: "Paltan Bazar feeder" },
+  { code: "SEG-S05", from: "DPRS-02", to: "DPRS-03", zone: "secondary", material: "PE", dia: 110, maop: 6, route: "Chandmari branch" },
+  { code: "SEG-S06", from: "JCT-02", to: "DPRS-05", zone: "secondary", material: "PE", dia: 110, maop: 6, route: "Maligaon feeder" },
+  { code: "SEG-S07", from: "JCT-02", to: "DPRS-06", zone: "secondary", material: "PE", dia: 160, maop: 6, route: "Kamakhya feeder" },
+  { code: "SEG-S08", from: "JCT-04", to: "DPRS-04", zone: "secondary", material: "PE", dia: 110, maop: 6, route: "Khanapara–Ganeshguri branch" },
+  { code: "SEG-S09", from: "JCT-05", to: "DPRS-03", zone: "secondary", material: "PE", dia: 110, maop: 6, route: "Chandmari south feeder" },
+  { code: "SEG-S10", from: "DPRS-06", to: "DPRS-02", zone: "secondary", material: "PE", dia: 110, maop: 6, route: "Kamakhya–Paltan branch" },
 ];
 
 /* ───────────────────────── name pools ───────────────────────── */
 
 const DOMESTIC_NAMES = [
-  "Sharma Residence", "Patil Niwas", "Joshi Bungalow", "Deshmukh Residence",
-  "Kulkarni House", "Gaikwad Residence", "Sathe Apartments", "Bhosale Niwas",
-  "Chavan Residence", "Thatte House", "Wagh Residency", "Pawar Apartments",
-  "More Residence", "Kale House", "Shinde Niwas", "Nikam Residence",
-  "Jadhav House", "Sutar Residence", "Borude Apartments", "Khedekar Niwas",
+  "Bora Residence", "Sarma Niwas", "Baruah Bungalow", "Hazarika Residence",
+  "Gogoi House", "Saikia Residence", "Konwar Apartments", "Medhi Niwas",
+  "Chetia Residence", "Dutta House", "Borthakur Residency", "Nath Apartments",
+  "Das Residence", "Kalita House", "Deka Niwas", "Barman Residence",
+  "Choudhury House", "Rabha Residence", "Borah Apartments", "Talukdar Niwas",
 ];
 const COMMERCIAL_NAMES = [
-  "Hotel Sandhya", "Sai Traders", "Nashik Foods", "Annapurna Caterers",
-  "Ganesh Bakery", "Royal Enclave Hotel", "Krishna Sweets", "Apex Hardware",
-  "Blue Diamond Restaurant", "Shree Veg Dining", "Metro Garments", "Precision Tools",
-  "City Centre Mall Kiosk", "Dominos Gangapur", "Cafe Coffee Day College Rd",
-  "Royal Inn", "Suyojit Lodge", "Gold Coin Restaurant", "Quick Bites", "Urban Tadka",
+  "Hotel Brahmaputra", "Prag Jyoti Traders", "Guwahati Foods", "Annapurna Caterers",
+  "Kamakhya Bakery", "Hotel Rajdhani", "Assam Sweets", "Apex Hardware",
+  "Blue River Restaurant", "Shree Veg Dining", "Metro Garments", "Precision Tools",
+  "City Centre Mall Kiosk", "Dominos Dispur", "Cafe Coffee Day GS Road",
+  "Hotel Nandan", "Suyojit Lodge", "Gold Coin Restaurant", "Quick Bites", "Urban Tadka",
 ];
 const INDUSTRIAL_NAMES = [
-  "Godavari Distilleries", "Puneri Gears Pvt Ltd", "Vishwas Precision",
-  "Ambad Plastics Ltd", "Shakti Forgings", "Nashik Auto Components",
-  "Deccan Aerosystems", "Trimurti Packaging", "Sahyadri Chemicals",
-  "Riddhi Siddhi Glass", "Orchid Pharma Unit II", "Bharat Fabricators",
-  "Jayshree Textiles", "Ashirwad Motors Plant", "Suvarna Machineries",
+  "Brahmaputra Distilleries", "Assam Precision Works", "Kamrup Plastics Ltd",
+  "Amingaon Forgings", "Guwahati Auto Components", "North East Packaging",
+  "Brahmaputra Chemicals", "Luit Pharma Unit II", "Bharat Fabricators",
+  "Jayshree Textiles", "Amingaon Motors Plant", "Suvarna Machineries",
+  "Numaligarh Petrochem", "Brahmaputra Cements", "Luit Agro Industries",
 ];
 const INSTITUTIONAL_NAMES = [
-  "GMCH Hospital", "KTHM College Hostel", "Nashik Municipal School",
-  "Sunrise International School", "Dnyaneshwar Library", "Cidco Water Works",
-  "Panchavati Temple Trust", "Fire Station Gangapur", "District Collectorate",
-  "Symbiosis Campus Nashik",
+  "GMCH Guwahati", "Cotton University Hostel", "Guwahati Municipal School",
+  "Sunrise International School", "Assam State Library", "Guwahati Water Works",
+  "Kamakhya Temple Trust", "Fire Station Chandmari", "Kamrup Collectorate",
+  "Gauhati University Campus",
 ];
 const CNG_NAMES = [
-  "HPCL Daughter Station Ambad", "IOCL Daughter Station Cidco",
-  "Reliance BP Mobility Satpur", "Mahanagar Gas Station Panchavati",
-  "GAIL CNG Station Pathardi",
+  "HPCL Daughter Station Jalukbari", "IOCL Daughter Station Khanapara",
+  "Reliance BP Mobility Maligaon", "Mahanagar Gas Station Chandmari",
+  "GAIL CNG Station Amingaon",
 ];
 const LOCALITIES = [
-  "Gangapur Road", "College Road", "Indira Nagar", "Cidco", "Panchavati",
-  "Satpur", "Ambad", "Nashik Road", "Deolali", "Mhasrul", "Pathardi",
-  "Sharanpur Road", "Dindori Road", "Ashok Stambh", "Makhmalabad Road",
+  "Jalukbari", "Amingaon", "North Guwahati", "Maligaon", "Kamakhya",
+  "Paltan Bazar", "Chandmari", "Ganeshguri", "Khanapara", "Beltola",
+  "Dispur", "Six Mile", "G.S. Road", "Zoo Road", "Narengi",
+  "Fancy Bazar", "Panbazar", "Hatigaon", "Basistha", "Jorabat",
 ];
 
 /* ───────────────────────── main seed ───────────────────────── */
@@ -243,11 +244,11 @@ function runSeed(db: Db) {
     /* users */
     const pw = (s: string) => scryptHash(s);
     const userRows = [
-      { username: "admin", fullName: "Anita Deshmukh", role: "admin" as const, passwordHash: pw("admin123") },
-      { username: "operator", fullName: "Ravi Kulkarni", role: "operator" as const, passwordHash: pw("ops123") },
-      { username: "viewer", fullName: "S. Iyer", role: "viewer" as const, passwordHash: pw("view123") },
-      { username: "field", fullName: "Vikram Singh", role: "operator" as const, passwordHash: pw("field123") },
-      { username: "supervisor", fullName: "Meera Joshi", role: "operator" as const, passwordHash: pw("super123") },
+      { username: "admin", fullName: "Anupam Bora", role: "admin" as const, passwordHash: pw("admin123") },
+      { username: "operator", fullName: "Rituraj Saikia", role: "operator" as const, passwordHash: pw("ops123") },
+      { username: "viewer", fullName: "S. Das", role: "viewer" as const, passwordHash: pw("view123") },
+      { username: "field", fullName: "Bikash Kalita", role: "operator" as const, passwordHash: pw("field123") },
+      { username: "supervisor", fullName: "Mousumi Hazarika", role: "operator" as const, passwordHash: pw("super123") },
     ].map((u) => ({ ...u, active: true, createdAt: now }));
     const insertedUsers = tx.insert(users).values(userRows).returning().all();
     const userId = (name: string) => insertedUsers.find((u) => u.username === name)!.id;
@@ -395,7 +396,7 @@ function runSeed(db: Db) {
           nodeId: anchor.id,
           lat: anchor.lat + between(-0.012, 0.012),
           lng: anchor.lng + between(-0.014, 0.014),
-          address: `${rint(1, 220)}, ${locality}, Nashik`,
+          address: `${rint(1, 220)}, ${locality}, Guwahati, Assam`,
           connectedOn: new Date(rint(2017, 2025), rint(0, 11), rint(1, 28)).getTime(),
           approvedLoadSm3h: between(load[cat][0], load[cat][1]),
           meterSerial: `NM${rint(100000, 999999)}`,
@@ -643,7 +644,7 @@ function runSeed(db: Db) {
     tx.insert(settings)
       .values([
         { key: "company_name", value: "Aurum Gas Grid Pvt. Ltd." },
-        { key: "license_area", value: "Nashik, Maharashtra (Gujarat–Mumbai DNG spur)" },
+        { key: "license_area", value: "Guwahati & Brahmaputra Valley, Assam (Northeast India)" },
         { key: "simulator_enabled", value: true },
         { key: "simulator_interval_ms", value: 4000 },
         {

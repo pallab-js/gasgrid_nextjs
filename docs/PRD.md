@@ -66,8 +66,8 @@ error-prone.
 
 ## 7. Data & content
 
-Seeded demo dataset for a fictional licensee **“Aurum Gas Grid”** operating a Nashik
-(Maharashtra) licence area: 2 CGS, 6 DPRS, 4 CNG stations, valve/junction nodes,
+Seeded demo dataset for a fictional licensee **“Aurum Gas Grid”** operating a Guwahati
+and Brahmaputra Valley (Assam, Northeast India) licence area: 2 CGS, 6 DPRS, 4 CNG stations, valve/junction nodes,
 ~45 pipeline segments, ~180 consumers across DOMESTIC/COMMERCIAL/INDUSTRIAL/CNG/
 INSTITUTIONAL, 6 months of readings/invoices, 3 months of hourly telemetry history,
 historical alarms/work orders, 3 demo users.
